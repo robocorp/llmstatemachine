@@ -1,19 +1,28 @@
-# Large Language Model State Machine
+# Large Language Model State Machine (llmstatemachine)
 
 # WIP
 
 NOTE! This project is at this point a draft and a technical concept exploring state machine use for driving LLM Agents to success.
  
 ## Introduction
-The Large Language Model State Machine is a sophisticated framework for building state-driven workflow agents using large language models, like GPT-4. It's designed to streamline the process of handling complex workflows and decision-making processes in automated systems.
+
+The llmstatemachine library merges a state machine approach with advanced language 
+models like GPT, enhancing their decision-making capabilities. This library is designed to 
+steer agents, built using these models, on a defined path. It achieves this by using the 
+agent's chat history and custom tools you create using regular Python functions.
+
+This setup means the agent remembers past interactions with the tools (chat history) and uses this 
+memory, along with the tools you define, to make informed decisions. 
+The prototype runs on the OpenAI chat model and enforces the execution of 
+these Python function-based tools.
+
+The core focus of this project is to develop and explore workflows for an agent 
+using a state machine structure, where the agent's conversational abilities and
+memory (chat history) are central.
 
 ## Installation
 ```bash
-# Clone the repository
-git clone https://github.com/robocorp/llm_state_machine
-
-# Install dependencies (if any)
-pip install [dependencies]
+pip install llmsstatemachine
 ```
 
 ## Usage
@@ -21,12 +30,16 @@ To use the Large Language Model State Machine, follow these steps:
 
 1. Initialize a WorkflowAgentBuilder.
 2. Define states and their respective transitions.
-3. Build the workflow agent and add messages to it.
+3. Build the workflow agent and add a system message to it.
 4. Run model step by step until DONE.
 
-## Example
+## Example: Memory Game Agent
 
-Here is a simple memory game playing agent.
+Consider a memory game, where you need to remember and match hidden pairs -
+you don't see everything at once. Our library helps a language model play 
+such games. It keeps track of what's been revealed and helps the model make 
+smart guesses. This showcases how our library can be applied to scenarios 
+where you need to make decisions with limited information.
 
 ```python
 import random
