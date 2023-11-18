@@ -62,6 +62,18 @@ def initialize_game(num_pairs):
 deck, board = initialize_game(10)
 
 
+def display_board(argument: str) -> Tuple[str, str]:
+    """Display current board situation. Hidden cards are marked with X.
+
+    Parameters
+    ----------
+    argument : str
+       Use empty text
+    """
+    status = " ".join(str(deck[i]) if board[i] else 'X' for i in range(len(deck)))
+    return f"display_board: {status}", "INIT"
+
+
 def flip_card(argument: str) -> Tuple[str, str]:
     """Turn or flip a card at given position.
     Shows the value of that card or hides it.
@@ -74,9 +86,12 @@ def flip_card(argument: str) -> Tuple[str, str]:
     position = int(argument)
     if board[position]:
         board[position] = False
+        print(f"< debug not shown to agent {display_board('')[0]} >")
         return f"flip_card: Hide card at position {position}.", "INIT"
     board[position] = True
-    return f"flip_card: Showing card at position {position}. Value is {deck[position]}.", "INIT"
+    print(f"< debug not shown to agent {display_board('')[0]} >")
+    next_state = "COMPLETE" if all(board) else "INIT"
+    return f"flip_card: Showing card at position {position}. Value is {deck[position]}.", next_state
 
 
 def game_done(argument: str) -> Tuple[str, str]:
@@ -91,7 +106,8 @@ def game_done(argument: str) -> Tuple[str, str]:
 
 
 builder = WorkflowAgentBuilder()
-builder.add_state_and_transitions("INIT", {flip_card, game_done})
+builder.add_state_and_transitions("INIT", {flip_card, display_board})
+builder.add_state_and_transitions("COMPLETE", {game_done})
 builder.add_end_state("DONE")
 
 memory_game_agent = builder.build()
@@ -104,8 +120,7 @@ memory_game_agent.add_system_message("You are a player of memory game. " +
                                      "Once you have all pairs found and shown the game is done.")
 
 while memory_game_agent.current_state != "DONE":
-    result = memory_game_agent.step()
-    print(result)
+    memory_game_agent.step()
 print("-= OK =-")
 ```
 
