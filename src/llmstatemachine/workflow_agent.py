@@ -12,7 +12,7 @@ from openai.types.chat import (
 
 TransitionFunction = Callable[[...], Tuple[str, str]]
 FUNCTION_NAME = "ActionSelector"
-MODEL = "gpt-4-1106-preview"  # "gpt-4"
+MODEL = "gpt-4" # "gpt-4-1106-preview"
 
 
 def parse_function_docstring(func: Callable):
