@@ -123,6 +123,45 @@ while memory_game_agent.current_state != "DONE":
     memory_game_agent.step()
 print("-= OK =-")
 ```
+Example output from game play
+```shell
+...
+================================================================================
+tokens: 3642 total; 62 completion; 3580 prompt
+================================================================================
+AI: The card on position 18 shows a 7. I remember seeing a 7 long ago, it was at
+ position 2. So I will flip the card at position 2 to check if it matches.
+flip_card '2'
+< debug not shown to agent display_board: 9 5 7 9 8 8 1 5 6 4 2 4 6 X 10 2 10 1 7 X >
+flip_card: Showing card at position 2. Value is 7.
+================================================================================
+tokens: 3757 total; 86 completion; 3671 prompt
+================================================================================
+AI: We found another matching pair! The cards at positions 2 and 18 both have the
+ value 7. At this point, we have only two unknown cards remaining. Since all other
+  pairs have been found, these last two cards must form a pair as well. Let's flip
+   the card at position 19 to see its value.
+flip_card '19'
+< debug not shown to agent display_board: 9 5 7 9 8 8 1 5 6 4 2 4 6 X 10 2 10 1 7 3 >
+flip_card: Showing card at position 19. Value is 3.
+================================================================================
+tokens: 3837 total; 51 completion; 3786 prompt
+================================================================================
+AI: As I thought, the last card is a 3, which matches with the card at position 13
+ we discovered earlier. Let's flip it to confirm.
+flip_card '13'
+< debug not shown to agent display_board: 9 5 7 9 8 8 1 5 6 4 2 4 6 3 10 2 10 1 7 3 >
+flip_card: Showing card at position 13. Value is 3.
+================================================================================
+tokens: 3872 total; 52 completion; 3820 prompt
+================================================================================
+AI: The last pair matched as expected. I have now found all the pairs in the game.
+ The game has been solved.
+game_done 'Found all pairs. The game has been solved successfully.'
+Found all pairs. The game has been solved successfully.
+-= OK =-
+```
+
 
 ## API Reference
 
