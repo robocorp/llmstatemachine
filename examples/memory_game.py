@@ -32,7 +32,8 @@ def flip_card(argument: str) -> Tuple[str, str]:
         board[position] = False
         return f"flip_card: Hide card at position {position}.", "INIT"
     board[position] = True
-    return f"flip_card: Showing card at position {position}. Value is {deck[position]}.", "INIT"
+    next_state = "COMPLETE" if all(board) else "INIT"
+    return f"flip_card: Showing card at position {position}. Value is {deck[position]}.", next_state
 
 
 def game_done(argument: str) -> Tuple[str, str]:
@@ -47,7 +48,8 @@ def game_done(argument: str) -> Tuple[str, str]:
 
 
 builder = WorkflowAgentBuilder()
-builder.add_state_and_transitions("INIT", {flip_card, game_done})
+builder.add_state_and_transitions("INIT", {flip_card})
+builder.add_state_and_transitions("COMPLETE", {game_done})
 builder.add_end_state("DONE")
 
 memory_game_agent = builder.build()
@@ -60,6 +62,5 @@ memory_game_agent.add_system_message("You are a player of memory game. " +
                                      "Once you have all pairs found and shown the game is done.")
 
 while memory_game_agent.current_state != "DONE":
-    result = memory_game_agent.step()
-    print(result)
+    memory_game_agent.step()
 print("-= OK =-")
