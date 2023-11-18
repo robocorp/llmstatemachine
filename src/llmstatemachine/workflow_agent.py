@@ -98,6 +98,12 @@ class WorkflowAgent:
     def add_message(self, message: ChatCompletionMessageParam | ChatCompletionMessage):
         self._messages.append(message)
 
+    def add_system_message(self, content: str):
+        self.add_message({
+            "role": "system",
+            "content": content
+        })
+
     @property
     def current_state(self):
         return self._current_state
