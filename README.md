@@ -38,7 +38,7 @@ you don't see everything at once. This is a partially observable environment. ll
 agent play such games.
 This showcases how the library can be applied to scenarios 
 where you need to make decisions with limited information.
-Also note that the game mechanisms are not forced, agent can do illegal moves. 
+Also note that the game mechanisms are not forced and agent can do illegal moves. 
 
 ```python
 import random
