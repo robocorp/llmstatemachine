@@ -19,26 +19,11 @@ deck, board = initialize_game(10)
 
 
 def display_board(argument: str) -> Tuple[str, str]:
-    """Display current board situation. Hidden cards are marked with X.
-
-    Parameters
-    ----------
-    argument : str
-       Use empty text
-    """
-    status = " ".join(str(deck[i]) if board[i] else 'X' for i in range(len(deck)))
-    return f"display_board: {status}", "INIT"
+    board_state = " ".join(f'{i}:{deck[i] if board[i] else "X"}' for i in range(len(deck)))
+    return f"display_board: (position:value or X if hidden) {board_state}", "INIT"
 
 
 def flip_card(argument: str) -> Tuple[str, str]:
-    """Turn or flip a card at given position.
-    Shows the value of that card or hides it.
-
-    Parameters
-    ----------
-    argument : str
-       Position number as text. Positions are from 0 to 9.
-    """
     position = int(argument)
     if board[position]:
         board[position] = False
@@ -51,13 +36,7 @@ def flip_card(argument: str) -> Tuple[str, str]:
 
 
 def game_done(argument: str) -> Tuple[str, str]:
-    """Call this to end the game when it has been solved.
-
-        Parameters
-        ----------
-        argument : str
-          Reasoning about game end.
-    """
+    """Call this to end the game"""
     return argument, "DONE"
 
 
