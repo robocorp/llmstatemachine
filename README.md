@@ -1,9 +1,8 @@
 # Large Language Model State Machine (llmstatemachine)
 
-# WIP
+[![Version](https://img.shields.io/pypi/v/llmstatemachine.svg)](https://pypi.python.org/pypi/llmstatemachine)
+[![Downloads](http://pepy.tech/badge/llmstatemachine)](http://pepy.tech/project/llmstatemachine)
 
-NOTE! This project is at this point a draft and a technical concept exploring state machine use for driving LLM Agents to success.
- 
 ## Introduction
 
 The llmstatemachine library merges a state machine approach with advanced language 
@@ -36,10 +35,11 @@ To use the Large Language Model State Machine, follow these steps:
 ## Example: Memory Game Agent
 
 Consider a memory game, where you need to remember and match hidden pairs -
-you don't see everything at once. Our library helps a language model play 
-such games. It keeps track of what's been revealed and helps the model make 
-smart guesses. This showcases how our library can be applied to scenarios 
+you don't see everything at once. Our library makes a language model based 
+agent play such games. Memory is the chat history.
+This showcases how our library can be applied to scenarios 
 where you need to make decisions with limited information.
+Also note that the game mechanisms are not forced, agent might do illegal moves. 
 
 ```python
 import random
