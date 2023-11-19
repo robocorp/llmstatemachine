@@ -38,11 +38,11 @@ To use the Large Language Model State Machine, follow these steps:
 ## Example: Memory Game Agent
 
 Consider a memory game, where you need to remember and match hidden pairs -
-you don't see everything at once. Our library makes a language model based 
-agent play such games. Memory is the chat history.
-This showcases how our library can be applied to scenarios 
+you don't see everything at once. This is a partially observable environment. llmstatemachibe enables a language model based 
+agent play such games.
+This showcases how the library can be applied to scenarios 
 where you need to make decisions with limited information.
-Also note that the game mechanisms are not forced, agent might do illegal moves. 
+Also note that the game mechanisms are not forced, agent can do illegal moves. 
 
 ```python
 import random
