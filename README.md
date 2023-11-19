@@ -19,6 +19,8 @@ The core focus of this project is to develop and explore workflows for an agent
 using a state machine structure, where the agent's conversational abilities and
 memory (chat history) are central.
 
+Function description JSONs are automatically generated with LLM from the function source.
+
 ## Installation
 ```bash
 pip install llmsstatemachine
@@ -27,10 +29,11 @@ pip install llmsstatemachine
 ## Usage
 To use the Large Language Model State Machine, follow these steps:
 
-1. Initialize a WorkflowAgentBuilder.
-2. Define states and their respective transitions.
-3. Build the workflow agent and add a system message to it.
-4. Run model step by step until DONE.
+1. Have OPENAI_API_KEY exported in your environment.
+2. Initialize a WorkflowAgentBuilder.
+3. Define states and their respective transitions.
+4. Build the workflow agent and add a system message to it.
+5. Run model step by step until DONE.
 
 ## Example: Memory Game Agent
 
