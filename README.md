@@ -8,7 +8,7 @@
 The llmstatemachine library merges a state machine approach with advanced language 
 models like GPT, enhancing their decision-making capabilities. This library is designed to 
 steer agents, built using these models, on a defined path. It achieves this by using the 
-agent's chat history and custom tools you create using regular Python functions.
+agent's chat history as its memory together with custom tools you create using Python functions.
 
 This setup means the agent remembers past interactions with the tools (chat history) and uses this 
 memory, along with the tools you define, to make informed decisions. 
