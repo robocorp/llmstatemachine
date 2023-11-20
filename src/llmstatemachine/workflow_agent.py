@@ -49,18 +49,13 @@ class WorkflowAgent:
             return result
         # Model trying to call something that is not allowed
         # State stays the same and let's just report back illegal move.
-        return (
-            f"Illegal function call '{function_call}' in current state."
-        )
+        return f"Illegal function call '{function_call}' in current state."
 
     def add_message(self, message: ChatCompletionMessageParam | ChatCompletionMessage):
         self._messages.append(message)
 
     def add_system_message(self, content: str):
-        self.add_message({
-            "role": "system",
-            "content": content
-        })
+        self.add_message({"role": "system", "content": content})
 
     @property
     def current_state(self):
@@ -83,7 +78,9 @@ class WorkflowAgent:
         for func in self._transitions[self._current_state].values():
             definition = self._func_defs[func]
             actions.append(definition["function_name"])
-            action_descriptions.append(definition["function_name"] + ": " + definition["function_description"])
+            action_descriptions.append(
+                definition["function_name"] + ": " + definition["function_description"]
+            )
             argument_descriptions.append(
                 f"For {definition['function_name']} argument: {definition['argument_description']}"
             )
@@ -161,7 +158,7 @@ class WorkflowAgentBuilder:
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = dict()
 
     def add_state_and_transitions(
-            self, state_name: str, transition_functions: set[TransitionFunction]
+        self, state_name: str, transition_functions: set[TransitionFunction]
     ):
         if state_name in self._transitions:
             raise Exception(f"State {state_name} transition already defined")

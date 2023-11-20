@@ -23,37 +23,44 @@ def create_definition(func: Callable) -> FunctionDefinition:
 ```
 {source}
 ```             
-"""
+""",
             }
         ],
-        functions=[{
-            "description": "FunctionDefinition is a tool for metadata extraction",
-            "name": "FunctionDefinition",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "thinking": {
-                        "type": "string",
-                        "description": (
-                            "Logical thinking about function metadata extraction and draft of the answer."
-                        ),
+        functions=[
+            {
+                "description": "FunctionDefinition is a tool for metadata extraction",
+                "name": "FunctionDefinition",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "thinking": {
+                            "type": "string",
+                            "description": (
+                                "Logical thinking about function metadata extraction and draft of the answer."
+                            ),
+                        },
+                        "function_name": {
+                            "type": "string",
+                            "description": "Name of the function.",
+                        },
+                        "function_description": {
+                            "type": "string",
+                            "description": "Short well thought description of what the function is used for.",
+                        },
+                        "argument_description": {
+                            "type": "string",
+                            "description": "Short well thought description of what the function argument is used for.",
+                        },
                     },
-                    "function_name": {
-                        "type": "string",
-                        "description": "Name of the function."
-                    },
-                    "function_description": {
-                        "type": "string",
-                        "description": "Short well thought description of what the function is used for."
-                    },
-                    "argument_description": {
-                        "type": "string",
-                        "description": "Short well thought description of what the function argument is used for."
-                    }
+                    "required": [
+                        "thinking",
+                        "function_name",
+                        "function_description",
+                        "argument_description",
+                    ],
                 },
-                "required": ["thinking", "function_name", "function_description", "argument_description"],
-            },
-        }],
+            }
+        ],
         function_call={"name": "FunctionDefinition"},
     )
     msg = response.choices[0].message
@@ -62,4 +69,3 @@ def create_definition(func: Callable) -> FunctionDefinition:
     print(msg.tool_calls)
     args: FunctionDefinition = json.loads(msg.function_call.arguments)
     return args
-
