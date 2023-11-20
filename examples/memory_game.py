@@ -2,11 +2,9 @@ import random
 
 from dotenv import load_dotenv
 
-from llmstatemachine.workflow_agent import set_next_state
-
 load_dotenv()
 
-from llmstatemachine import WorkflowAgentBuilder
+from llmstatemachine import WorkflowAgentBuilder, set_next_state
 
 
 def initialize_game(num_pairs):
