@@ -19,7 +19,9 @@ _CURRENT_STEPPING_AGENT = None
 
 
 class WorkflowAgent:
-    def __init__(self, goal: str, transitions: Dict[str, Dict[str, TransitionFunction]]):
+    def __init__(
+        self, goal: str, transitions: Dict[str, Dict[str, TransitionFunction]]
+    ):
         if "INIT" not in transitions:
             raise Exception("Must define INIT state")
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = transitions
@@ -108,6 +110,10 @@ class WorkflowAgent:
                 "required": ["thinking", "action", "argument"],
             },
         }
+
+    def run(self):
+        while self._transitions[self.current_state]:
+            self.step()
 
     def step(self):
         global _CURRENT_STEPPING_AGENT

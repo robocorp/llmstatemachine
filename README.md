@@ -87,23 +87,23 @@ def game_done(argument: str) -> str:
     return argument
 
 
-builder = WorkflowAgentBuilder()
-builder.add_system_message(
-    "You are a player of memory game. "
-    + "In this game you have 10 number pairs in 20 cards. "
-    + "Cards have been shuffled and they are all face down. "
-    + "You may flip a card to see the value. "
-    + "According to the rules of the memory game you can check a pair. "
-    + "If they are not a pair you must flip them back hidden. "
-    + "Once you have all pairs found and shown the game is done."
+memory_game_agent = (
+    WorkflowAgentBuilder()
+    .add_system_message(
+        "You are a player of memory game. "
+        + "In this game you have 10 number pairs in 20 cards. "
+        + "Cards have been shuffled and they are all face down. "
+        + "You may flip a card to see the value. "
+        + "According to the rules of the memory game you can check a pair. "
+        + "If they are not a pair you must flip them back hidden. "
+        + "Once you have all pairs found and shown the game is done."
+    )
+    .add_state_and_transitions("INIT", {flip_card, display_board})
+    .add_state_and_transitions("COMPLETE", {game_done})
+    .add_end_state("DONE")
+    .build()
 )
-builder.add_state_and_transitions("INIT", {flip_card, display_board})
-builder.add_state_and_transitions("COMPLETE", {game_done})
-builder.add_end_state("DONE")
-memory_game_agent = builder.build()
-
-while memory_game_agent.current_state != "DONE":
-    memory_game_agent.step()
+memory_game_agent.run()
 print("-= OK =-")
 ```
 Example output from game play
