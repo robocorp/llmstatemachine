@@ -45,11 +45,9 @@ import random
 
 from dotenv import load_dotenv
 
-from llmstatemachine.workflow_agent import set_next_state
-
 load_dotenv()
 
-from llmstatemachine import WorkflowAgentBuilder
+from llmstatemachine import WorkflowAgentBuilder, set_next_state
 
 
 def initialize_game(num_pairs):
@@ -63,7 +61,9 @@ deck, board = initialize_game(10)
 
 
 def display_board(argument: str) -> str:
-    board_state = " ".join(f'{i}:{deck[i] if board[i] else "X"}' for i in range(len(deck)))
+    board_state = " ".join(
+        f'{i}:{deck[i] if board[i] else "X"}' for i in range(len(deck))
+    )
     return f"display_board: (position:value or X if hidden) {board_state}"
 
 
@@ -93,18 +93,19 @@ builder.add_state_and_transitions("COMPLETE", {game_done})
 builder.add_end_state("DONE")
 
 memory_game_agent = builder.build()
-memory_game_agent.add_system_message("You are a player of memory game. " +
-                                     "In this game you have 10 number pairs in 20 cards. " +
-                                     "Cards have been shuffled and they are all face down. " +
-                                     "You may flip a card to see the value. " +
-                                     "According to the rules of the memory game you can check a pair. " +
-                                     "If they are not a pair you must flip them back hidden. " +
-                                     "Once you have all pairs found and shown the game is done.")
+memory_game_agent.add_system_message(
+    "You are a player of memory game. "
+    + "In this game you have 10 number pairs in 20 cards. "
+    + "Cards have been shuffled and they are all face down. "
+    + "You may flip a card to see the value. "
+    + "According to the rules of the memory game you can check a pair. "
+    + "If they are not a pair you must flip them back hidden. "
+    + "Once you have all pairs found and shown the game is done."
+)
 
 while memory_game_agent.current_state != "DONE":
     memory_game_agent.step()
 print("-= OK =-")
-
 ```
 Example output from game play
 ```shell
