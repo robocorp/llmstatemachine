@@ -1,5 +1,8 @@
 import json
 from typing import Dict, Callable, Any, Tuple, List
+
+from openai.types.chat.chat_completion_message import FunctionCall
+
 from .function import create_definition, FunctionDefinition
 
 from openai import OpenAI
@@ -9,9 +12,10 @@ from openai.types.chat import (
     completion_create_params,
 )
 
-TransitionFunction = Callable[[...], Tuple[str, str]]
+TransitionFunction = Callable[[...], str]
 FUNCTION_NAME = "ActionSelector"
-MODEL = "gpt-4" # "gpt-4-1106-preview"
+MODEL = "gpt-4"  # "gpt-4-1106-preview"
+_CURRENT_STEPPING_AGENT = None
 
 
 class WorkflowAgent:
@@ -20,6 +24,7 @@ class WorkflowAgent:
             raise Exception("Must define INIT state")
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = transitions
         self._current_state = "INIT"
+        self.next_state = None
         self._messages: List[ChatCompletionMessageParam] = []
         self._client = OpenAI()
         self._func_defs: Dict[TransitionFunction, FunctionDefinition] = dict()
@@ -33,12 +38,14 @@ class WorkflowAgent:
         transition_func = self._transitions[self._current_state].get(function_call)
         if transition_func:
             try:
-                result, next_state = transition_func(*args)
+                result = transition_func(*args)
             except Exception as e:
                 # Function raised an exception.
                 # No state update and returning exception.
                 return str(e)
-            self._current_state = next_state
+            if self.next_state:
+                self._current_state = self.next_state
+                self.next_state = None
             return result
         # Model trying to call something that is not allowed
         # State stays the same and let's just report back illegal move.
@@ -109,6 +116,7 @@ class WorkflowAgent:
         }
 
     def step(self):
+        global _CURRENT_STEPPING_AGENT
         response = self._client.chat.completions.create(
             model=MODEL,
             messages=self._messages,
@@ -122,7 +130,9 @@ class WorkflowAgent:
         print("=" * 80)
         msg = response.choices[0].message
         assert msg.function_call
-        res = execute_function_call(msg.function_call, self)
+        _CURRENT_STEPPING_AGENT = self
+        res = self._execute_function_call(msg.function_call)
+        _CURRENT_STEPPING_AGENT = None
         print(res[:120] + ("..." if len(res) > 120 else ""))
         self.add_message(msg)
         self.add_message(
@@ -130,16 +140,20 @@ class WorkflowAgent:
         )
         return res
 
+    def _execute_function_call(self, function_call: FunctionCall) -> str:
+        if function_call.name != FUNCTION_NAME:
+            return f"Error: function {function_call.name} does not exist"
+        args = json.loads(function_call.arguments)
+        print(f'AI: {args["thinking"]}')
+        action = args["action"]
+        argument = args["argument"]
+        print(f"""{action} '{argument}'""")
+        return self.trigger(action.lower(), [argument])
 
-def execute_function_call(function_call, workflow_agent: WorkflowAgent) -> str:
-    if function_call.name != FUNCTION_NAME:
-        return f"Error: function {function_call.name} does not exist"
-    args = json.loads(function_call.arguments)
-    print(f'AI: {args["thinking"]}')
-    action = args["action"]
-    argument = args["argument"]
-    print(f"""{action} '{argument}'""")
-    return workflow_agent.trigger(action.lower(), [argument])
+
+def set_next_state(state: str):
+    if _CURRENT_STEPPING_AGENT:
+        _CURRENT_STEPPING_AGENT.next_state = state
 
 
 class WorkflowAgentBuilder:
@@ -147,7 +161,7 @@ class WorkflowAgentBuilder:
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = dict()
 
     def add_state_and_transitions(
-        self, state_name: str, transition_functions: set[TransitionFunction]
+            self, state_name: str, transition_functions: set[TransitionFunction]
     ):
         if state_name in self._transitions:
             raise Exception(f"State {state_name} transition already defined")
