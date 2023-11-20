@@ -14,7 +14,7 @@ from openai.types.chat import (
 
 TransitionFunction = Callable[[...], str]
 FUNCTION_NAME = "ActionSelector"
-MODEL = "gpt-4-1106-preview" # "gpt-4"
+MODEL = "gpt-4-1106-preview"  # "gpt-4"
 _CURRENT_STEPPING_AGENT = None
 
 

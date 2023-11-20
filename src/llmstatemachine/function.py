@@ -15,7 +15,7 @@ def create_definition(func: Callable, goal: str) -> FunctionDefinition:
     source = inspect.getsource(func)
     client = OpenAI()
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4-1106-preview",
         messages=[
             {
                 "role": "system",
