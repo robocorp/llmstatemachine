@@ -73,6 +73,5 @@ Extract the function metadata.
     msg = response.choices[0].message
     assert msg.function_call
     print(msg.function_call)
-    print(msg.tool_calls)
     args: FunctionDefinition = json.loads(msg.function_call.arguments)
     return args

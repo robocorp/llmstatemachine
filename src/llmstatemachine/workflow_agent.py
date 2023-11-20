@@ -14,7 +14,7 @@ from openai.types.chat import (
 
 TransitionFunction = Callable[[...], str]
 FUNCTION_NAME = "ActionSelector"
-MODEL = "gpt-4"  # "gpt-4-1106-preview"
+MODEL = "gpt-4-1106-preview" # "gpt-4"
 _CURRENT_STEPPING_AGENT = None
 
 
@@ -32,7 +32,6 @@ class WorkflowAgent:
         for name_dict in self._transitions.values():
             for func in name_dict.values():
                 if func not in self._func_defs:
-                    print(repr(func))
                     self._func_defs[func] = create_definition(func, goal)
 
     def trigger(self, function_call: str, args: List[Any]) -> str:

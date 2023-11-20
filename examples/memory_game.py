@@ -46,7 +46,7 @@ def game_done(argument: str) -> str:
 
 builder = WorkflowAgentBuilder()
 builder.add_system_message(
-"You are a player of memory game. "
+    "You are a player of memory game. "
     + "In this game you have 10 number pairs in 20 cards. "
     + "Cards have been shuffled and they are all face down. "
     + "You may flip a card to see the value. "
