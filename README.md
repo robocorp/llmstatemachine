@@ -8,7 +8,7 @@
 llmstatemachine is a library for creating agents with GPT-based language models and state machine logic.
 
 
-- **Chat History as Memory**: The agent uses chat history to make better decisions.
+- **Chat History as Memory**: With large context window models chat history is all you need for agent memory.
 - **Custom Python Functions with JSON Generation**: Develop functions to make agent actions.
   The library automatically generates the JSON definitions for these functions for agent and OpenAI API use.
 - **Controlled Actions**: Agents are limited to specific actions in each state, ensuring consistent behavior.
