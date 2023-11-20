@@ -111,9 +111,11 @@ class WorkflowAgent:
             },
         }
 
-    def run(self):
+    def run(self) -> str:
+        result = "No result"
         while self._transitions[self.current_state]:
-            self.step()
+            result = self.step()
+        return result
 
     def step(self):
         global _CURRENT_STEPPING_AGENT
