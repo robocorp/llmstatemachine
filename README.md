@@ -42,9 +42,10 @@ Also note that the game mechanisms are not forced and agent can do illegal moves
 
 ```python
 import random
-from typing import Tuple
 
 from dotenv import load_dotenv
+
+from llmstatemachine.workflow_agent import set_next_state
 
 load_dotenv()
 
@@ -61,26 +62,29 @@ def initialize_game(num_pairs):
 deck, board = initialize_game(10)
 
 
-def display_board(argument: str) -> Tuple[str, str]:
+def display_board(argument: str) -> str:
     board_state = " ".join(f'{i}:{deck[i] if board[i] else "X"}' for i in range(len(deck)))
-    return f"display_board: (position:value or X if hidden) {board_state}", "INIT"
+    return f"display_board: (position:value or X if hidden) {board_state}"
 
 
-def flip_card(argument: str) -> Tuple[str, str]:
+def flip_card(argument: str) -> str:
     position = int(argument)
     if board[position]:
         board[position] = False
         print(f"< debug not shown to agent {display_board('')[0]} >")
-        return f"flip_card: Hide card at position {position}.", "INIT"
+        set_next_state("INIT")
+        return f"flip_card: Hide card at position {position}."
     board[position] = True
-    print(f"< debug not shown to agent {display_board('')[0]} >")
-    next_state = "COMPLETE" if all(board) else "INIT"
-    return f"flip_card: Showing card at position {position}. Value is {deck[position]}.", next_state
+    print(f"< debug not shown to agent {display_board('')} >")
+    if all(board):
+        set_next_state("COMPLETE")
+    return f"flip_card: Showing card at position {position}. Value is {deck[position]}."
 
 
-def game_done(argument: str) -> Tuple[str, str]:
+def game_done(argument: str) -> str:
     """Call this to end the game"""
-    return argument, "DONE"
+    set_next_state("DONE")
+    return argument
 
 
 builder = WorkflowAgentBuilder()

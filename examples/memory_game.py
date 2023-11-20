@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 
 from dotenv import load_dotenv
 
