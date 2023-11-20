@@ -71,7 +71,7 @@ def flip_card(argument: str) -> str:
     position = int(argument)
     if board[position]:
         board[position] = False
-        print(f"< debug not shown to agent {display_board('')[0]} >")
+        print(f"< debug not shown to agent {display_board('')} >")
         set_next_state("INIT")
         return f"flip_card: Hide card at position {position}."
     board[position] = True
@@ -88,12 +88,7 @@ def game_done(argument: str) -> str:
 
 
 builder = WorkflowAgentBuilder()
-builder.add_state_and_transitions("INIT", {flip_card, display_board})
-builder.add_state_and_transitions("COMPLETE", {game_done})
-builder.add_end_state("DONE")
-
-memory_game_agent = builder.build()
-memory_game_agent.add_system_message(
+builder.add_system_message(
     "You are a player of memory game. "
     + "In this game you have 10 number pairs in 20 cards. "
     + "Cards have been shuffled and they are all face down. "
@@ -102,6 +97,10 @@ memory_game_agent.add_system_message(
     + "If they are not a pair you must flip them back hidden. "
     + "Once you have all pairs found and shown the game is done."
 )
+builder.add_state_and_transitions("INIT", {flip_card, display_board})
+builder.add_state_and_transitions("COMPLETE", {game_done})
+builder.add_end_state("DONE")
+memory_game_agent = builder.build()
 
 while memory_game_agent.current_state != "DONE":
     memory_game_agent.step()
