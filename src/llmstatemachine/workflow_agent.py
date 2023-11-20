@@ -19,20 +19,21 @@ _CURRENT_STEPPING_AGENT = None
 
 
 class WorkflowAgent:
-    def __init__(self, transitions: Dict[str, Dict[str, TransitionFunction]]):
+    def __init__(self, goal: str, transitions: Dict[str, Dict[str, TransitionFunction]]):
         if "INIT" not in transitions:
             raise Exception("Must define INIT state")
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = transitions
         self._current_state = "INIT"
         self.next_state = None
         self._messages: List[ChatCompletionMessageParam] = []
+        self._messages.append({"role": "system", "content": goal})
         self._client = OpenAI()
         self._func_defs: Dict[TransitionFunction, FunctionDefinition] = dict()
         for name_dict in self._transitions.values():
             for func in name_dict.values():
                 if func not in self._func_defs:
                     print(repr(func))
-                    self._func_defs[func] = create_definition(func)
+                    self._func_defs[func] = create_definition(func, goal)
 
     def trigger(self, function_call: str, args: List[Any]) -> str:
         transition_func = self._transitions[self._current_state].get(function_call)
@@ -53,9 +54,6 @@ class WorkflowAgent:
 
     def add_message(self, message: ChatCompletionMessageParam | ChatCompletionMessage):
         self._messages.append(message)
-
-    def add_system_message(self, content: str):
-        self.add_message({"role": "system", "content": content})
 
     @property
     def current_state(self):
@@ -155,7 +153,12 @@ def set_next_state(state: str):
 
 class WorkflowAgentBuilder:
     def __init__(self):
+        self._system_message = ""
         self._transitions: Dict[str, Dict[str, TransitionFunction]] = dict()
+
+    def add_system_message(self, message: str):
+        self._system_message = message
+        return self
 
     def add_state_and_transitions(
         self, state_name: str, transition_functions: set[TransitionFunction]
@@ -176,4 +179,4 @@ class WorkflowAgentBuilder:
     def build(self) -> WorkflowAgent:
         if "INIT" not in self._transitions:
             raise Exception("Must define INIT state")
-        return WorkflowAgent(self._transitions)
+        return WorkflowAgent(self._system_message, self._transitions)

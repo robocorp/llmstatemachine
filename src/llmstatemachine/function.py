@@ -11,7 +11,7 @@ class FunctionDefinition(TypedDict):
     argument_description: str
 
 
-def create_definition(func: Callable) -> FunctionDefinition:
+def create_definition(func: Callable, goal: str) -> FunctionDefinition:
     source = inspect.getsource(func)
     client = OpenAI()
     response = client.chat.completions.create(
@@ -22,7 +22,14 @@ def create_definition(func: Callable) -> FunctionDefinition:
                 "content": f"""Extract function metadata from the following function definition:
 ```
 {source}
-```             
+```
+
+Focus on details that are meaningful for the following assignment:
+```
+{goal}
+```
+
+Extract the function metadata.
 """,
             }
         ],
