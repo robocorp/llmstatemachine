@@ -148,7 +148,9 @@ def display_maze(maze, player):
 
 
 m = Maze()
-m.generator = Prims(10, 10)
+maze_height = 5
+maze_width = 5
+m.generator = Prims(maze_height, maze_height)
 m.generate()
 m.generate_entrances()
 print("-" * 80)
@@ -234,7 +236,7 @@ def start(argument: str) -> str:
 maze_game_agent_builder = (
     WorkflowAgentBuilder()
     .add_system_message(
-        "You are a player in a 2 dimensional 10x10 maze. "
+        f"You are a player in a 2 dimensional {maze_height}x{maze_width} maze. "
         + "Find your way through the maze."
     )
     .add_end_state("DONE")
