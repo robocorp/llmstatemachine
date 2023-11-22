@@ -44,9 +44,13 @@ class MazePlayer:
             print(f"Moved to ({y}, {x})")
             if self.is_cross_section(y, x, direction):
                 steps.append("Stopped: at a cross-section")
+                steps.append(
+                    f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}"
+                )
                 return steps
 
         steps.append("Stopped: Path is blocked")
+        steps.append(f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}")
         return steps
 
     def is_cross_section(self, y, x, direction):
