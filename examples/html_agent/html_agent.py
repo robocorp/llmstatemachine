@@ -46,9 +46,7 @@ def validate(argument: str):
                 f"""validate "{argument}" did not contain element with "{expectation}".""",
             )
     set_next_state("VALIDATED")
-    return (
-        f"""validate "{argument}" seems valid.""",
-    )
+    return (f"""validate "{argument}" seems valid.""",)
 
 
 def result(argument: str):
@@ -92,17 +90,19 @@ if __name__ == "__main__":
     examples_str = '"' + '", "'.join(examples) + '"'
     expectations = examples
     builder = WorkflowAgentBuilder()
-    builder.add_system_message((
-        "You are a helpful HTML css selector finding assistant.\n"
-        "Assignment: Create CSS Selectors Based on Text Content.\n"
-        "Your task is to develop CSS selectors that can target HTML elements containing specific text contents. "
-        "You are provided with a list of example texts. Use these examples to create selectors that can identify "
-        "elements containing these texts in a given HTML structure.\n\n"
-        "Instructions:\n"
-        f"- Use the provided list of examples: {examples_str}.\n"
-        "Your goal is to create selectors that are both precise and efficient, tailored to the specific"
-        " content and structure of the HTML elements."
-    ))
+    builder.add_system_message(
+        (
+            "You are a helpful HTML css selector finding assistant.\n"
+            "Assignment: Create CSS Selectors Based on Text Content.\n"
+            "Your task is to develop CSS selectors that can target HTML elements containing specific text contents. "
+            "You are provided with a list of example texts. Use these examples to create selectors that can identify "
+            "elements containing these texts in a given HTML structure.\n\n"
+            "Instructions:\n"
+            f"- Use the provided list of examples: {examples_str}.\n"
+            "Your goal is to create selectors that are both precise and efficient, tailored to the specific"
+            " content and structure of the HTML elements."
+        )
+    )
     builder.add_state_and_transitions("INIT", {focus, select})
     builder.add_state_and_transitions("SELECTED_NON_EMPTY", {focus, select, validate})
     builder.add_state_and_transitions("VALIDATED", {focus, select, validate, result})

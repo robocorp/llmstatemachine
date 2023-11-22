@@ -16,10 +16,10 @@ class MazePlayer:
         self.maze = maze
         self.position = start
         self.directions = {
-            'UP': (-1, 0),
-            'DOWN': (1, 0),
-            'LEFT': (0, -1),
-            'RIGHT': (0, 1)
+            "UP": (-1, 0),
+            "DOWN": (1, 0),
+            "LEFT": (0, -1),
+            "RIGHT": (0, 1),
         }
 
     def move(self, direction: str) -> list[str]:
@@ -50,7 +50,9 @@ class MazePlayer:
                 return steps
 
         steps.append("Stopped: Path is blocked")
-        steps.append(f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}")
+        steps.append(
+            f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}"
+        )
         return steps
 
     def is_cross_section(self, y, x, direction):
@@ -59,7 +61,7 @@ class MazePlayer:
 
         # Check for openings directly adjacent in perpendicular directions
         perp_openings = False
-        if direction in ['UP', 'DOWN']:
+        if direction in ["UP", "DOWN"]:
             # Check LEFT and RIGHT for perpendicular openings
             if x > 0 and self.maze.grid[y][x - 1] == 0:
                 perp_openings = True
@@ -67,7 +69,7 @@ class MazePlayer:
             if x < len(self.maze.grid[0]) - 1 and self.maze.grid[y][x + 1] == 0:
                 perp_openings = True
                 print(f"Open path in perpendicular direction RIGHT at ({y}, {x + 1})")
-        elif direction in ['LEFT', 'RIGHT']:
+        elif direction in ["LEFT", "RIGHT"]:
             # Check UP and DOWN for perpendicular openings
             if y > 0 and self.maze.grid[y - 1][x] == 0:
                 perp_openings = True
@@ -86,7 +88,9 @@ class MazePlayer:
     def is_end_nearby(self, y, x):
         """Check if the end 'E' is next to the player's position."""
         end_y, end_x = self.maze.end
-        return (abs(end_y - y) <= 1 and end_x == x) or (abs(end_x - x) <= 1 and end_y == y)
+        return (abs(end_y - y) <= 1 and end_x == x) or (
+            abs(end_x - x) <= 1 and end_y == y
+        )
 
     def is_blocked(self, y, x, direction: str) -> bool:
         """Check if movement in the current direction is blocked."""
@@ -133,13 +137,13 @@ def display_maze(maze, player):
     for y, row in enumerate(maze.grid):
         for x, cell in enumerate(row):
             if (y, x) == (player_y, player_x):
-                print('X', end='')
+                print("X", end="")
             elif (y, x) == (start_y, start_x):
-                print('S', end='')
+                print("S", end="")
             elif (y, x) == (end_y, end_x):
-                print('E', end='')
+                print("E", end="")
             else:
-                print('#' if cell == 1 else ' ', end='')
+                print("#" if cell == 1 else " ", end="")
         print()  # New line after each row
 
 
@@ -174,8 +178,10 @@ player = MazePlayer(m, find_start_position_near_s(m))
 is_manual = False
 while is_manual:
     display_maze(m, player)
-    direction = input("Enter direction (UP, DOWN, LEFT, RIGHT) or 'STOP' to end: ").upper()
-    if direction == 'STOP':
+    direction = input(
+        "Enter direction (UP, DOWN, LEFT, RIGHT) or 'STOP' to end: "
+    ).upper()
+    if direction == "STOP":
         break
     new_position = player.move(direction)
     print("New Position:", new_position)
@@ -222,16 +228,17 @@ def move_right(argument: str) -> str:
 
 def start(argument: str) -> str:
     set_next_state(player.free_directions())
-    return f"You have just entered the maze. Your position is {player.position}."
+    return f"You have just entered the maze. Your position is {player.position}. You can move from here: {player.free_directions().replace(':', ', ')}."
 
 
-maze_game_agent_builder = (WorkflowAgentBuilder()
-                           .add_system_message(
-    "You are a player in a 2 dimensional 10x10 maze. "
-    + "Find your way through the maze."
+maze_game_agent_builder = (
+    WorkflowAgentBuilder()
+    .add_system_message(
+        "You are a player in a 2 dimensional 10x10 maze. "
+        + "Find your way through the maze."
+    )
+    .add_end_state("DONE")
 )
-                           .add_end_state("DONE")
-                           )
 
 
 def match_directions_to_callables(direction_combination) -> set[Callable]:
@@ -240,7 +247,7 @@ def match_directions_to_callables(direction_combination) -> set[Callable]:
         "UP": move_up,
         "DOWN": move_down,
         "LEFT": move_left,
-        "RIGHT": move_right
+        "RIGHT": move_right,
     }
 
     for direction in direction_combination:
@@ -253,18 +260,20 @@ def match_directions_to_callables(direction_combination) -> set[Callable]:
 for state in player.all_direction_combinations():
     state_str = ":".join(sorted(state))
     print(state_str)
-    maze_game_agent_builder.add_state_and_transitions(state_str, match_directions_to_callables(state))
+    maze_game_agent_builder.add_state_and_transitions(
+        state_str, match_directions_to_callables(state)
+    )
 
 
 maze_game_agent_builder.add_state_and_transitions("INIT", {start})
 
 memory_game_agent = maze_game_agent_builder.build()
 
-print("="*80)
+print("=" * 80)
 display_maze(m, player)
-print("="*80)
+print("=" * 80)
 memory_game_agent.run()
-print("="*80)
+print("=" * 80)
 display_maze(m, player)
-print("="*80)
+print("=" * 80)
 print("-= OK =-")
