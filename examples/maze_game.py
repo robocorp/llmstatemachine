@@ -32,7 +32,7 @@ class MazePlayer:
             if 0 <= new_y < len(self.maze.grid) and 0 <= new_x < len(self.maze.grid[0]):
                 y, x = new_y, new_x
                 self.position = (y, x)
-                steps.append(f"Moving {direction}: from ({y}, {x})")
+                steps.append(f"Moved {direction} to ({y}, {x})")
             else:
                 steps.append("Stopped: Out of bounds")  # Debug print
                 return steps
@@ -45,13 +45,13 @@ class MazePlayer:
             if self.is_cross_section(y, x, direction):
                 steps.append("Stopped: at a cross-section")
                 steps.append(
-                    f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}"
+                    f"From current location you may move: {self.free_directions().replace(':', ', ')}"
                 )
                 return steps
 
         steps.append("Stopped: Path is blocked")
         steps.append(
-            f"From current location ({y}, {x}) you may move: {self.free_directions().replace(':', ', ')}"
+            f"From current location you may move: {self.free_directions().replace(':', ', ')}"
         )
         return steps
 
