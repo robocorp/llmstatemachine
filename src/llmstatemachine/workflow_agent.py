@@ -20,7 +20,7 @@ _CURRENT_STEPPING_AGENT = None
 
 class WorkflowAgent:
     def __init__(
-        self, goal: str, transitions: Dict[str, Dict[str, TransitionFunction]]
+            self, goal: str, transitions: Dict[str, Dict[str, TransitionFunction]]
     ):
         if "INIT" not in transitions:
             raise Exception("Must define INIT state")
@@ -111,10 +111,12 @@ class WorkflowAgent:
             },
         }
 
-    def run(self) -> str:
+    def run(self, callback: Callable[[str], Any] | None = None) -> str:
         result = "No result"
         while self._transitions[self.current_state]:
             result = self.step()
+            if callback:
+                callback(result)
         return result
 
     def step(self):
@@ -168,7 +170,7 @@ class WorkflowAgentBuilder:
         return self
 
     def add_state_and_transitions(
-        self, state_name: str, transition_functions: set[TransitionFunction]
+            self, state_name: str, transition_functions: set[TransitionFunction]
     ):
         if state_name in self._transitions:
             raise Exception(f"State {state_name} transition already defined")
