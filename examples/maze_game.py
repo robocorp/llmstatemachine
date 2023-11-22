@@ -236,7 +236,7 @@ def start(argument: str) -> str:
 maze_game_agent_builder = (
     WorkflowAgentBuilder()
     .add_system_message(
-        f"You are a player in a 2 dimensional {maze_height}x{maze_width} maze. "
+        f"You are a player in a 2 dimensional {maze_height*2}x{maze_width*2} maze. "
         + "Find your way through the maze."
     )
     .add_end_state("DONE")
