@@ -11,6 +11,12 @@ class FunctionDefinition(TypedDict):
     argument_description: str
 
 
+def is_valid_function_definition(data: dict) -> bool:
+    required_keys = ['function_name', 'function_description', 'argument_description']
+    return all(key in data and isinstance(data[key], str) for key in required_keys)
+
+
+
 def create_definition(func: Callable, goal: str) -> FunctionDefinition:
     source = inspect.getsource(func)
     client = OpenAI()
@@ -74,4 +80,8 @@ Extract the function metadata.
     assert msg.function_call
     print(msg.function_call)
     args: FunctionDefinition = json.loads(msg.function_call.arguments)
+
+    if not is_valid_function_definition(args):
+        raise ValueError("Invalid data format for FunctionDefinition")
+
     return args
