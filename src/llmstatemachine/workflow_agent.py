@@ -148,10 +148,10 @@ class WorkflowAgent:
         if function_call.name != FUNCTION_NAME:
             return f"Error: function {function_call.name} does not exist"
         args = json.loads(function_call.arguments)
-        print(f'AI: {args["thinking"]}')
+        for key in args:
+            print(f'{key}: {args[key]}')
         action = args["action"]
         argument = args["argument"]
-        print(f"""{action} '{argument}'""")
         return self.trigger(action.lower(), [argument])
 
 
