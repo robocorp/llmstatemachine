@@ -145,17 +145,26 @@ Found all pairs. The game has been solved successfully.
 
 ## API Reference
 
-### WorkflowAgentBuilder
-
-- `add_state_and_transitions(state_name, transition_functions): Define a state and its transitions.`
-- `add_end_state(state_name): Define an end state for the workflow.`
-- `build(): Builds and returns a WorkflowAgent.`
-
 ### WorkflowAgent
 
-- `trigger(function_call, args): Triggers a transition in the workflow.`
-- `add_message(message): Adds a message to the workflow.`
-- `step(): Executes a step in the workflow.`
+- `__init__(self, goal, transitions)`: Initialize the agent with a goal and a set of state transitions.
+- `trigger(self, function_call, args)`: Triggers a transition in the workflow.
+- `add_message(self, message)`: Adds a message to the workflow.
+- `run(self, callback)`: Runs the agent, processing steps until completion.
+- `step(self)`: Executes a single step in the workflow.
+
+### WorkflowAgentBuilder
+
+- `add_system_message(self, message)`: Sets a system message for the agent.
+- `add_state_and_transitions(self, state_name, transition_functions)`: Define a state and its transitions.
+- `add_end_state(self, state_name)`: Define an end state for the workflow.
+- `build(self)`: Builds and returns a `WorkflowAgent`.
+
+## External Resources
+
+For more insights into the implementation and journey of `llmstatemachine`, read our blog post: [Exploring AI Agents: A Journey with llmstatemachine](https://robocorp.com/blog/exploring-ai-agents-journey-with-llmstatemachine).
+
+"In this article, we explore the implementation of generative AI agents, delving into the challenges and solutions encountered in navigating and engaging with dynamic digital environments."
 
 ## License
 Apache 2.0
